@@ -1,26 +1,27 @@
 using HyperGnosys.Core;
 using HyperGnosys.PersonalityModule.Factions;
+using HyperGnosys.PersonaModule;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
     public class FactionAwarenessComponent : MonoBehaviour, IAllyAwareness, IEnemyAwareness
     {
         [SerializeField] private bool debugging = false;
         [SerializeField] private FactionTag thisAwarenessFactionTag;
-        [SerializeField] private ListProperty<BodyTag> sensedObjects;
+        [SerializeField] private ObservableList<BodyTag> sensedObjects;
         /// <summary>
         /// Se puede tener una memoria para los Known Allies y Enemies para no volver a hacer el proceso de reconocimiento.
         /// Pero probablemente no vale la pena tener esa memoria en todas las personas, ni para todas las personas.
         /// Asi que se puede tener un estatus de VIP para que solo los VIP tengan memoria y solo recuerden otros VIPs.
         /// </summary>
-        [SerializeField] private ListWrapper<BodyTag> perceivedAllies = new ListWrapper<BodyTag>();
-        [SerializeField] private ListWrapper<BodyTag> perceivedEnemies = new ListWrapper<BodyTag>();
+        [SerializeField] private ObservableList<BodyTag> perceivedAllies = new ObservableList<BodyTag>();
+        [SerializeField] private ObservableList<BodyTag> perceivedEnemies = new ObservableList<BodyTag>();
         private void Awake()
         {
-            sensedObjects.OnItemAdded.AddListener(DetectPersonas);
-            sensedObjects.OnItemRemoved.AddListener(UnDetectPersonas);
+            sensedObjects.AddOnItemAddedListener(DetectPersonas);
+            sensedObjects.AddOnItemRemovedListener(UnDetectPersonas);
         }
         private void DetectPersonas(BodyTag detectedBody)
         {
@@ -72,8 +73,8 @@ namespace HyperGnosys.PersonaModule
                 return;
             }
         }
-        public ListWrapper<BodyTag> PerceivedAllies { get => perceivedAllies; }
-        public ListWrapper<BodyTag> PerceivedEnemies { get => perceivedEnemies; }
-        public ListProperty<BodyTag> SensedObjects { get => sensedObjects; set => sensedObjects = value; }
+        public ObservableList<BodyTag> PerceivedAllies { get => perceivedAllies; }
+        public ObservableList<BodyTag> PerceivedEnemies { get => perceivedEnemies; }
+        public ObservableList<BodyTag> SensedObjects { get => sensedObjects; set => sensedObjects = value; }
     }
 }

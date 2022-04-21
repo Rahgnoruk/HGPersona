@@ -1,4 +1,5 @@
 using HyperGnosys.Core;
+using HyperGnosys.Persona;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

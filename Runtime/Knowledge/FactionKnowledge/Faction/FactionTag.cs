@@ -1,5 +1,5 @@
 using HyperGnosys.Core;
-using HyperGnosys.PersonaModule;
+using HyperGnosys.Persona;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,17 +7,17 @@ namespace HyperGnosys.PersonalityModule.Factions
 {
     public class FactionTag : MonoBehaviour, IModuleComponent
     {
-        [SerializeField] private ListWrapper<Faction> factionAllegiances = new ListWrapper<Faction>();
-        private ListWrapper<Faction> resultingAllyFactions = new ListWrapper<Faction>();
-        private ListWrapper<Faction> resultingEnemyFactions = new ListWrapper<Faction>();
+        [SerializeField] private ObservableList<Faction> factionAllegiances = new ObservableList<Faction>();
+        private ObservableList<Faction> resultingAllyFactions = new ObservableList<Faction>();
+        private ObservableList<Faction> resultingEnemyFactions = new ObservableList<Faction>();
         private void OnValidate()
         {
             CalculateAllegiancesAndEnmities();
         }
         private void Awake()
         {
-            factionAllegiances.OnItemAdded.AddListener(CalculateNewFactionAllegiance);
-            factionAllegiances.OnItemRemoved.AddListener(CalculateAbandonedFaction);
+            factionAllegiances.AddOnItemAddedListener(CalculateNewFactionAllegiance);
+            factionAllegiances.AddOnItemRemovedListener(CalculateAbandonedFaction);
         }
         private void CalculateNewFactionAllegiance(Faction newFaction)
         {
@@ -87,11 +87,11 @@ namespace HyperGnosys.PersonalityModule.Factions
         }
         private void OnDisable()
         {
-            factionAllegiances.OnItemAdded.RemoveListener(CalculateNewFactionAllegiance);
-            factionAllegiances.OnItemRemoved.RemoveListener(CalculateAbandonedFaction);
+            factionAllegiances.RemoveOnItemAddedListener(CalculateNewFactionAllegiance);
+            factionAllegiances.RemoveOnItemRemovedListener(CalculateAbandonedFaction);
         }
-        public ListWrapper<Faction> FactionAllegiances { get => factionAllegiances; set => factionAllegiances = value; }
-        public ListWrapper<Faction> ResultingAllyFactions { get => resultingAllyFactions; set => resultingAllyFactions = value; }
-        public ListWrapper<Faction> ResultingEnemyFactions { get => resultingEnemyFactions; set => resultingEnemyFactions = value; }
+        public ObservableList<Faction> FactionAllegiances { get => factionAllegiances; set => factionAllegiances = value; }
+        public ObservableList<Faction> ResultingAllyFactions { get => resultingAllyFactions; set => resultingAllyFactions = value; }
+        public ObservableList<Faction> ResultingEnemyFactions { get => resultingEnemyFactions; set => resultingEnemyFactions = value; }
     }
 }

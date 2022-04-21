@@ -1,33 +1,26 @@
 ﻿using HyperGnosys.Core;
+using HyperGnosys.PersonaModule;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
     public class PersonalRelation
     {
         private RelationshipPersonaComponent thisPersonaComponent;
         private RelationshipPersona thisPersona;
-        
+
         private RelationshipGroup thisPersonasAllegiances;
         private RelationshipGroup thisPersonasEnmities;
-        
-        
-        
+
+
+
         private RelationshipPersonaComponent otherPersonaComponent;
         private RelationshipPersona otherPersona;
 
-        private LearnedRelationshipHashSetWrapper otherPersonaKnownAllegiances;
-        private GameEventListener<LearnedRelationship> onKnownAllegianceAdded 
-            = new GameEventListener<LearnedRelationship>();
-        private GameEventListener<LearnedRelationship> onKnownAllegianceRemoved
-            = new GameEventListener<LearnedRelationship>();
+        private LearnedRelationships otherPersonaKnownAllegiances;
 
-        private LearnedRelationshipHashSetWrapper otherPersonaKnownEnmities;
-        private GameEventListener<LearnedRelationship> onKnownEnmityAdded
-            = new GameEventListener<LearnedRelationship>();
-        private GameEventListener<LearnedRelationship> onKnownEnmityRemoved
-            = new GameEventListener<LearnedRelationship>();
+        private LearnedRelationships otherPersonaKnownEnmities;
 
         private int allyScore = 0;
         private int enemyScore = 0;
@@ -35,19 +28,18 @@ namespace HyperGnosys.PersonaModule
         private RelationType enemyRelationType;
         private RelationType currentRelationType;
 
-        
         public PersonalRelation(RelationshipPersonaComponent thisPersonaComponent, RelationshipPersonaComponent otherPersonaComponent,
-            LearnedRelationshipHashSetWrapper otherPersonaKnownAllegiances, LearnedRelationshipHashSetWrapper otherPersonaKnownEnmities,
+            LearnedRelationships otherPersonaKnownAllegiances, LearnedRelationships otherPersonaKnownEnmities,
             RelationType allyRelationType, RelationType enemyRelationType)
         {
             this.thisPersonaComponent = thisPersonaComponent;
-            this.thisPersona = thisPersonaComponent.Value;
-            this.thisPersonasAllegiances = this.thisPersona.Allegiances;
-            this.thisPersonasEnmities = this.thisPersona.Enmities;
+            thisPersona = thisPersonaComponent.Value;
+            thisPersonasAllegiances = thisPersona.Allegiances;
+            thisPersonasEnmities = thisPersona.Enmities;
 
             this.otherPersonaComponent = otherPersonaComponent;
-            this.otherPersona = otherPersonaComponent.Value;
-            this.otherPersonaKnownAllegiances.Value.OnItemAdded.AddListener(onKnownAllegianceAdded);
+            otherPersona = otherPersonaComponent.Value;
+            this.otherPersonaKnownAllegiances.AddOnItemAddedListener(OnKnownAllegianceAdded);
 
             this.allyRelationType = allyRelationType;
             this.enemyRelationType = enemyRelationType;
@@ -55,12 +47,28 @@ namespace HyperGnosys.PersonaModule
             UpdateRelation();
         }
 
+        private void OnKnownAllegianceAdded(LearnedRelationship learnedRelationship)
+        {
+
+        }
+        private void OnKnownAllegianceRemoved(LearnedRelationship learnedRelationship)
+        {
+
+        }
+        private void OnKnownEnmityAdded(LearnedRelationship learnedRelationship)
+        {
+
+        }
+        private void OnKnownEnmityRemoved(LearnedRelationship learnedRelationship)
+        {
+
+        }
         /// <summary>
         /// Hay que procesar las relaciones detectadas para verificar el learning method. 
         /// Si simplemente se sobreescribieran, los learning methods no servirian.
         /// </summary>
         /// <param name="otherPersonaNewLearnedAllegiances"></param>
-        public void ReceiveOtherPersonaDetectedAllegiances(LearnedRelationshipHashSetWrapper otherPersonaNewLearnedAllegiances,
+        public void ReceiveOtherPersonaDetectedAllegiances(LearnedRelationships otherPersonaNewLearnedAllegiances,
             LearningMethod learningMethod)
         {
             if (ReceiveDetectedRelationships(otherPersonaKnownAllegiances, otherPersonaNewLearnedAllegiances, learningMethod))
@@ -69,7 +77,7 @@ namespace HyperGnosys.PersonaModule
             }
         }
 
-        public void ReceiveOtherPersonaDetectedEnmities(LearnedRelationshipHashSetWrapper otherPersonaNewLearnedEnmities,
+        public void ReceiveOtherPersonaDetectedEnmities(LearnedRelationships otherPersonaNewLearnedEnmities,
             LearningMethod learningMethod)
         {
             if (ReceiveDetectedRelationships(otherPersonaKnownEnmities, otherPersonaNewLearnedEnmities, learningMethod))
@@ -78,41 +86,41 @@ namespace HyperGnosys.PersonaModule
             }
         }
 
-        private bool ReceiveDetectedRelationships(LearnedRelationshipHashSetWrapper currentlyKnownRelationships, 
-            LearnedRelationshipHashSetWrapper newLearnedRelationships, LearningMethod learningMethod)
+        private bool ReceiveDetectedRelationships(LearnedRelationships currentlyKnownRelationships,
+            LearnedRelationships newLearnedRelationships, LearningMethod learningMethod)
         {
             ///Si las relaciones de la persona han cambiado, hay que actualizar 
             ///los scores de aliado y enemigo
-            int knownRelationshipsCount = currentlyKnownRelationships.Value.Count();
+            int knownRelationshipsCount = currentlyKnownRelationships.Count;
 
             ///Clona el hashset de las relaciones detectadas. Tienes que clonarlo para no editar directo el set
-            HashSet<LearnedRelationship> relationshipsToAdd
-                = new HashSet<LearnedRelationship>(newLearnedRelationships.Value.HashSet);
+            List<LearnedRelationship> relationshipsToAdd
+                = new List<LearnedRelationship>(newLearnedRelationships.List);
             ///Elimina todas las relaciones del HashSet de las ya conocidas, dejando solo las nuevas
             ///Si el hashset de las conocidas tiene elementos que no estan en las nuevas, no afecta.
             ///Solo se quedan las que SI estan en las nuevas pero no en las viejas
-            relationshipsToAdd.ExceptWith(currentlyKnownRelationships.Value.HashSet);
+            //relationshipsToAdd.ExceptWith(currentlyKnownRelationships.List);
 
             ///Agrega las relaciones al set de las conocidas
             foreach (LearnedRelationship newRelationshipLearned in relationshipsToAdd)
             {
-                currentlyKnownRelationships.Value.Add(newRelationshipLearned);
+                currentlyKnownRelationships.Add(newRelationshipLearned);
             }
             ///Ahora clona el set de Relaciones Conocidas PERO ya con las nuevas relaciones agregadas
-            HashSet<LearnedRelationship> relationshipsToRemove
-                = new HashSet<LearnedRelationship>(currentlyKnownRelationships.Value.HashSet);
+            List<LearnedRelationship> relationshipsToRemove
+                = new List<LearnedRelationship>(currentlyKnownRelationships.List);
             ///Al hacer except con las nuevas relaciones detectadas con todo y las nuevas, lo que quedan son 
             ///las relaciones que si estan entre las Conocidas pero que no se detectaron con el Learning Method 
             ///que se esta procesando en este momento
-            relationshipsToRemove.ExceptWith(newLearnedRelationships.Value.HashSet);
+            //relationshipsToRemove.ExceptWith(newLearnedRelationships.List);
             foreach (LearnedRelationship relationshipToRemove in relationshipsToRemove)
             {
                 if (learningMethod.Priority >= relationshipToRemove.LearningMethod.Priority)
                 {
-                    currentlyKnownRelationships.Value.Remove(relationshipToRemove);
+                    currentlyKnownRelationships.Remove(relationshipToRemove);
                 }
             }
-            if (knownRelationshipsCount != currentlyKnownRelationships.Value.Count())
+            if (knownRelationshipsCount != currentlyKnownRelationships.Count)
             {
                 return true;
             }
@@ -128,13 +136,14 @@ namespace HyperGnosys.PersonaModule
 
             if (currentRelationType.Equals(allyRelationType))
             {
-                this.thisPersona.KnownAllies.Value.Add(otherPersonaComponent);
-                this.thisPersona.KnownEnemies.Value.Remove(otherPersonaComponent);
+                thisPersona.KnownAllies.Add(otherPersonaComponent);
+                thisPersona.KnownEnemies.Remove(otherPersonaComponent);
 
-            }else if (currentRelationType.Equals(enemyRelationType))
+            }
+            else if (currentRelationType.Equals(enemyRelationType))
             {
-                this.thisPersona.KnownEnemies.Value.Add(otherPersonaComponent);
-                this.thisPersona.KnownAllies.Value.Remove(otherPersonaComponent);
+                thisPersona.KnownEnemies.Add(otherPersonaComponent);
+                thisPersona.KnownAllies.Remove(otherPersonaComponent);
             }
         }
         public RelationType DetermineRelationship()
@@ -157,9 +166,9 @@ namespace HyperGnosys.PersonaModule
         {
             allyScore = 0;
             ///El amigo de mi amigo es mi amigo
-            foreach (LearnedRelationship otherPersonasAllegiance in otherPersonaKnownAllegiances.Value.HashSet)
+            foreach (LearnedRelationship otherPersonasAllegiance in otherPersonaKnownAllegiances.List)
             {
-                foreach (ScriptableRelationship thisPersonasAllegiance in thisPersonasAllegiances.Ledger)
+                foreach (ScriptableRelationship thisPersonasAllegiance in thisPersonasAllegiances.List)
                 {
                     if (thisPersonasAllegiance.Relationship.Concept.Equals
                         (otherPersonasAllegiance.LearnedScriptableRelationship.Relationship.Concept))
@@ -170,9 +179,9 @@ namespace HyperGnosys.PersonaModule
                 }
             }
             ///El enemigo de mi enemigo es mi amigo
-            foreach (LearnedRelationship otherPersonasEnmity in otherPersonaKnownEnmities.Value.HashSet)
+            foreach (LearnedRelationship otherPersonasEnmity in otherPersonaKnownEnmities.List)
             {
-                foreach (ScriptableRelationship thisPersonasEnmity in thisPersonasEnmities.Ledger)
+                foreach (ScriptableRelationship thisPersonasEnmity in thisPersonasEnmities.List)
                 {
                     if (thisPersonasEnmity.Relationship.Concept.Equals
                         (otherPersonasEnmity.LearnedScriptableRelationship.Relationship.Concept))
@@ -190,9 +199,9 @@ namespace HyperGnosys.PersonaModule
         {
             enemyScore = 0;
             ///El aliado de mi enemigo es mi enemigo
-            foreach (LearnedRelationship otherPersonasAllegiance in otherPersonaKnownAllegiances.Value.HashSet)
+            foreach (LearnedRelationship otherPersonasAllegiance in otherPersonaKnownAllegiances.List)
             {
-                foreach (ScriptableRelationship thisPersonasEnmity in thisPersonasEnmities.Ledger)
+                foreach (ScriptableRelationship thisPersonasEnmity in thisPersonasEnmities.List)
                 {
                     if (thisPersonasEnmity.Relationship.Concept.Equals
                         (otherPersonasAllegiance.LearnedScriptableRelationship.Relationship.Concept))
@@ -203,9 +212,9 @@ namespace HyperGnosys.PersonaModule
                 }
             }
             ///El enemigo de mi aliado es mi enemigo
-            foreach (LearnedRelationship otherPersonasEnmity in otherPersonaKnownEnmities.Value.HashSet)
+            foreach (LearnedRelationship otherPersonasEnmity in otherPersonaKnownEnmities.List)
             {
-                foreach (ScriptableRelationship thisPersonasAllegiance in thisPersonasAllegiances.Ledger)
+                foreach (ScriptableRelationship thisPersonasAllegiance in thisPersonasAllegiances.List)
                 {
                     if (thisPersonasAllegiance.Relationship.Concept.Equals
                         (otherPersonasEnmity.LearnedScriptableRelationship.Relationship.Concept))
@@ -219,7 +228,7 @@ namespace HyperGnosys.PersonaModule
         }
 
         public RelationType CurrentRelationType { get => currentRelationType; set => currentRelationType = value; }
-        public LearnedRelationshipHashSetWrapper OtherPersonaKnownAllegiances
+        public LearnedRelationships OtherPersonaKnownAllegiances
         {
             get => otherPersonaKnownAllegiances;
             private set
@@ -227,7 +236,7 @@ namespace HyperGnosys.PersonaModule
                 otherPersonaKnownAllegiances = value;
             }
         }
-        public LearnedRelationshipHashSetWrapper OtherPersonaKnownEnmities
+        public LearnedRelationships OtherPersonaKnownEnmities
         {
             get => otherPersonaKnownEnmities;
             private set

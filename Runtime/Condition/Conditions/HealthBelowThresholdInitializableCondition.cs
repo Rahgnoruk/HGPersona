@@ -1,18 +1,21 @@
 using HyperGnosys.Core;
+using HyperGnosys.MathUtilities;
+using HyperGnosys.PersonaModule;
 using System;
 using UnityEngine;
 
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
     [Serializable]
     public class HealthBelowThresholdInitializableCondition : ICondition
     {
         [SerializeField, Range(0, 1)] private float healthThreshold = 0.7f;
 
-        private Attribute<float> health;
-        private Attribute<float> maxHealth;
+        private ExternalizableLabeledProperty<float> health;
+        private ExternalizableLabeledProperty<float> maxHealth;
 
-        public void Init(Attribute<float> health, Attribute<float> maxHealth)
+        public void Init(ExternalizableLabeledProperty<float> health,
+            ExternalizableLabeledProperty<float> maxHealth)
         {
             this.health = health;
             this.maxHealth = maxHealth;
@@ -20,7 +23,7 @@ namespace HyperGnosys.PersonaModule
 
         public bool Evaluate()
         {
-            bool isHealthBelowThreshold = AttributeUtilities.GetHealthPercentage(health, maxHealth) < healthThreshold;
+            bool isHealthBelowThreshold = FloatOperations.GetPercentage(health.Value, maxHealth.Value) < healthThreshold;
             return isHealthBelowThreshold;
         }
     }

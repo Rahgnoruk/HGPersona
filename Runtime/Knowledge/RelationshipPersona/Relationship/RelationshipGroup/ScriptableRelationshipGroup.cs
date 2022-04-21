@@ -1,8 +1,8 @@
 ﻿using HyperGnosys.Core;
 
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
-    public class ScriptableRelationshipGroup : AScriptableProperty<HashSetWrapper<ScriptableRelationship>>
+    public class ScriptableRelationshipGroup : AScriptableObservableList<ScriptableRelationship>
     {
     }
 }

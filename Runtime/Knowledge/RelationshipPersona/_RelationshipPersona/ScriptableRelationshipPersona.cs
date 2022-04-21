@@ -1,9 +1,10 @@
 ﻿using HyperGnosys.Core;
 using UnityEngine;
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
-    [CreateAssetMenu(fileName = "New Scriptable Persona", menuName = "HyperGnosys/Persona Module/Persona")]
-    public class ScriptableRelationshipPersona : AScriptableProperty<RelationshipPersona>
+    [CreateAssetMenu(menuName = "HyperGnosys/Persona Module/Persona")]
+    public class ScriptableRelationshipPersona 
+        : AScriptableObservableProperty<RelationshipPersona>
     {
     }
 }

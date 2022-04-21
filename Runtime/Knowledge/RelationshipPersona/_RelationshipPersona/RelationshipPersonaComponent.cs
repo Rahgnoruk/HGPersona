@@ -1,8 +1,8 @@
 ﻿using HyperGnosys.Core;
 
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
-    public class RelationshipPersonaComponent : APropertyComponent<RelationshipPersona>
+    public class RelationshipPersonaComponent : AObservablePropertyComponent<RelationshipPersona>
     {
     }
 }

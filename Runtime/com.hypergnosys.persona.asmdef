@@ -1,3 +1,17 @@
 {
-	"name": "com.hypergnosys.persona"
+    "name": "com.hypergnosys.persona",
+    "rootNamespace": "",
+    "references": [
+        "GUID:96dde5c6a633b9b4cbf9b550836d9ac1",
+        "GUID:7f3c6d9351acfd14d855b3bbf732e311"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

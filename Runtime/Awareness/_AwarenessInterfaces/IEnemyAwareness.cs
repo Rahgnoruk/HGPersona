@@ -1,9 +1,9 @@
 using HyperGnosys.Core;
 
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
     public interface IEnemyAwareness
     {
-        ListWrapper<BodyTag> PerceivedEnemies { get; }
+        ObservableList<BodyTag> PerceivedEnemies { get; }
     }
 }

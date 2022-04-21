@@ -1,4 +1,5 @@
 ﻿using HyperGnosys.Core;
+using HyperGnosys.Persona;
 using UnityEngine;
 namespace HyperGnosys.PersonaModule
 {

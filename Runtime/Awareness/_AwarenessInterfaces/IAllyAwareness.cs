@@ -4,6 +4,6 @@ namespace HyperGnosys.PersonaModule
 {
     public interface IAllyAwareness
     {
-        ListWrapper<BodyTag> PerceivedAllies { get; }
+        ObservableList<BodyTag> PerceivedAllies { get; }
     }
 }

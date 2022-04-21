@@ -1,4 +1,5 @@
 using HyperGnosys.Core;
+using HyperGnosys.Persona;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,11 +8,8 @@ namespace HyperGnosys.PersonaModule
 {
     public class GuardPersonality : APersonality
     {
-        [SerializeField] private AttributesComponent attributes;
-        [SerializeField] private AttributeTag healthAttributeTag;
-        [SerializeField] private AttributeTag maxHealthAttributeTag;
-        private Attribute<float> healthAttribute;
-        private Attribute<float> maxHealthAttribute;
+        [SerializeField] private ExternalizableLabeledProperty<float> healthAttribute;
+        [SerializeField] private ExternalizableLabeledProperty<float> maxHealthAttribute;
 
         [SerializeField] private FactionAwarenessComponent enemyAwareness;
         [SerializeField] private SingleTargetFactionAwarenessComponent targetAwareness;
@@ -55,18 +53,10 @@ namespace HyperGnosys.PersonaModule
             rangedAttackAttitude = new Attitude(this, rangedAttackBehaviour.Reference, Debugging);
             fleeingAttitude = new Attitude(this, fleeingBehaviour.Reference, Debugging);
         }
-        private void GetHealthAttributes()
-        {
-            healthAttribute = attributes.GetAttribute<float>(healthAttributeTag);
-            if (healthAttribute == null) Debug.Log("health attribute not found");
-            maxHealthAttribute = attributes.GetAttribute<float>(maxHealthAttributeTag);
-            if (maxHealthAttribute == null) Debug.Log("max health attribute not found");
-        }
 
         protected override void Init()
         {
             CreateAttitudes();
-            GetHealthAttributes();
 
             healthTooLowForMeleeCondition.Init(healthAttribute, maxHealthAttribute);
             shouldFleeCondition.Init(healthAttribute, maxHealthAttribute, enemyAwareness);

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
-    [CreateAssetMenu(fileName = "New Concept", menuName = "HyperGnosys/Persona Module/Concept")]
+    [CreateAssetMenu(menuName = "HyperGnosys/Persona Module/Concept")]
     public class ScriptableConcept : ScriptableObject
     {
         [SerializeField] private Concept concept;

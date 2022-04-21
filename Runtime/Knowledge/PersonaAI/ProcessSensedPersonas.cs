@@ -3,7 +3,7 @@ using HyperGnosys.PersonaModule;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-namespace HyperGnosys.ArtificialIntelligence
+namespace HyperGnosys.Persona
 {
     public class ProcessSensedPersonas : MonoBehaviour
     {
@@ -11,19 +11,19 @@ namespace HyperGnosys.ArtificialIntelligence
         [SerializeField] private LearningMethod sensoryLearningMethod;
         [SerializeField] private RelationType allyRelationType;
         [SerializeField] private RelationType enemyRelationType;
-        [SerializeField] private AMonoHashSetWrapper<GameObject> sensedAllies;
-        [SerializeField] private AMonoHashSetWrapper<GameObject> sensedEnemies;
+        [SerializeField] private ObservableList<GameObject> sensedAllies;
+        [SerializeField] private ObservableList<GameObject> sensedEnemies;
 
 
         private RelationshipPersona thisAgentsPersona;
-        
 
-        
+
+
 
         private void OnEnable()
         {
             thisAgentsPersona = thisAgentsPersonaComponent.Value;
-            
+
         }
 
         public void OnAddedInteractedTarget(GameObject target)
@@ -31,16 +31,16 @@ namespace HyperGnosys.ArtificialIntelligence
             ///Verifica si el target si es una Persona
             RelationshipPersonaComponent otherPersonaComponent = target.transform.root.GetComponentInChildren<RelationshipPersonaComponent>();
             ///Si no es una persona, deja de procesarlo
-            if(otherPersonaComponent == null)
+            if (otherPersonaComponent == null)
             {
                 return;
             }
 
             RelationshipPersona otherPersona = otherPersonaComponent.Value;
-            LearnedRelationshipHashSetWrapper otherPersonasDetectedAllegiances 
+            LearnedRelationships otherPersonasDetectedAllegiances
                 = FindRelationshipsThroughLearningMethod(otherPersona.Allegiances);
 
-            LearnedRelationshipHashSetWrapper otherPersonasDetectedEnmities 
+            LearnedRelationships otherPersonasDetectedEnmities
                 = FindRelationshipsThroughLearningMethod(otherPersona.Enmities);
 
             PersonalRelation personalRelation;
@@ -58,7 +58,7 @@ namespace HyperGnosys.ArtificialIntelligence
                 personalRelation = thisAgentsPersona.KnownPersonas[otherPersonaComponent];
                 ///Revisa si las lealtades y enemistades percibidas son las mismas que ya se conocian
                 ///y corrige en caso de que no.
-                personalRelation.ReceiveOtherPersonaDetectedAllegiances(otherPersonasDetectedAllegiances, 
+                personalRelation.ReceiveOtherPersonaDetectedAllegiances(otherPersonasDetectedAllegiances,
                     sensoryLearningMethod);
                 personalRelation.ReceiveOtherPersonaDetectedEnmities(otherPersonasDetectedEnmities,
                     sensoryLearningMethod);
@@ -66,22 +66,22 @@ namespace HyperGnosys.ArtificialIntelligence
             ///Revisa si la persona que estas viendo es aliado o enemigo e indicalo
             if (personalRelation.CurrentRelationType == allyRelationType)
             {
-                sensedAllies.Value.Add(otherPersonaComponent.gameObject);
+                sensedAllies.Add(otherPersonaComponent.gameObject);
             }
             else if (personalRelation.CurrentRelationType == enemyRelationType)
             {
-                sensedEnemies.Value.Add(otherPersonaComponent.gameObject);
+                sensedEnemies.Add(otherPersonaComponent.gameObject);
             }
         }
 
-        private LearnedRelationshipHashSetWrapper FindRelationshipsThroughLearningMethod(RelationshipGroup otherPersonRelationships)
+        private LearnedRelationships FindRelationshipsThroughLearningMethod(RelationshipGroup otherPersonRelationships)
         {
-            LearnedRelationshipHashSetWrapper visibleRelationships = new LearnedRelationshipHashSetWrapper();
-            foreach(ScriptableRelationship relationship in otherPersonRelationships.Ledger)
+            LearnedRelationships visibleRelationships = new LearnedRelationships();
+            foreach (ScriptableRelationship relationship in otherPersonRelationships.List)
             {
-                if (relationship.Relationship.LearningMethod.Equals(this.sensoryLearningMethod))
+                if (relationship.Relationship.LearningMethod.Equals(sensoryLearningMethod))
                 {
-                    visibleRelationships.Value.Add(new LearnedRelationship(sensoryLearningMethod, relationship));
+                    visibleRelationships.Add(new LearnedRelationship(sensoryLearningMethod, relationship));
                 }
             }
             return visibleRelationships;
@@ -98,19 +98,19 @@ namespace HyperGnosys.ArtificialIntelligence
             ///Indica que el aliado o enemigo se esta dejando de percibir
             if (personalRelation.CurrentRelationType == allyRelationType)
             {
-                sensedAllies.Value.Remove(otherPersonaComponent.gameObject);
+                sensedAllies.Remove(otherPersonaComponent.gameObject);
             }
             else if (personalRelation.CurrentRelationType == enemyRelationType)
             {
-                sensedEnemies.Value.Remove(otherPersonaComponent.gameObject);
+                sensedEnemies.Remove(otherPersonaComponent.gameObject);
             }
         }
         public RelationshipPersonaComponent ThisAgentsPersonaComponent { get => thisAgentsPersonaComponent; set => thisAgentsPersonaComponent = value; }
         public RelationshipPersona ThisAgentsPersona { get => thisAgentsPersona; set => thisAgentsPersona = value; }
         public RelationType AllyRelationType { get => allyRelationType; set => allyRelationType = value; }
         public RelationType EnemyRelationType { get => enemyRelationType; set => enemyRelationType = value; }
-        public AMonoHashSetWrapper<GameObject> SensedAllies { get => sensedAllies; set => sensedAllies = value; }
-        public AMonoHashSetWrapper<GameObject> SensedEnemies { get => sensedEnemies; set => sensedEnemies = value; }
+        public ObservableList<GameObject> SensedAllies { get => sensedAllies; set => sensedAllies = value; }
+        public ObservableList<GameObject> SensedEnemies { get => sensedEnemies; set => sensedEnemies = value; }
         public LearningMethod SensoryLearningMethod { get => sensoryLearningMethod; set => sensoryLearningMethod = value; }
     }
 }

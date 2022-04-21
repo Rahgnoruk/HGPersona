@@ -1,8 +1,10 @@
 using HyperGnosys.Core;
+using HyperGnosys.MathUtilities;
+using HyperGnosys.PersonaModule;
 using System;
 using UnityEngine;
 
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
     [Serializable]
     public class EvaluateHealthAndEnemiesInitializableCondition : ICondition
@@ -10,11 +12,11 @@ namespace HyperGnosys.PersonaModule
         [SerializeField] private float hurtHealthPercentage = 0.5f;
         [SerializeField] private float criticalHealthPercentage = 0.1f;
         [SerializeField] private int overwhelmingEnemiesAmount = 2;
-        private Attribute<float> health;
-        private Attribute<float> maxHealth;
+        private ExternalizableLabeledProperty<float> health;
+        private ExternalizableLabeledProperty<float> maxHealth;
         private IEnemyAwareness enemyAwareness;
 
-        public void Init(Attribute<float> health, Attribute<float> maxHealth, IEnemyAwareness enemyAwareness)
+        public void Init(ExternalizableLabeledProperty<float> health, ExternalizableLabeledProperty<float> maxHealth, IEnemyAwareness enemyAwareness)
         {
             this.health = health;
             this.maxHealth = maxHealth;
@@ -23,9 +25,9 @@ namespace HyperGnosys.PersonaModule
 
         public bool Evaluate()
         {
-            bool isHealthBelowHalf = AttributeUtilities.GetHealthPercentage(health, maxHealth) < hurtHealthPercentage;
+            bool isHealthBelowHalf = FloatOperations.GetPercentage(health.Value, maxHealth.Value) < hurtHealthPercentage;
             bool isTooRisky = isHealthBelowHalf && enemyAwareness.PerceivedEnemies.Count >= overwhelmingEnemiesAmount;
-            bool isHealthCritical = AttributeUtilities.GetHealthPercentage(health, maxHealth) < criticalHealthPercentage;
+            bool isHealthCritical = FloatOperations.GetPercentage(health.Value, maxHealth.Value) < criticalHealthPercentage;
             return isTooRisky || isHealthCritical;
         }
     }

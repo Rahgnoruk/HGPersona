@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
-    [CreateAssetMenu(fileName = "New Learning Method", menuName = "HyperGnosys/Persona Module/Learning Method")]
+    [CreateAssetMenu(menuName = "HyperGnosys/Persona Module/Learning Method")]
     public class LearningMethod : ScriptableObject
     {
-        [Range(0,100)]
+        [Range(0, 100)]
         private int priority = 0;
 
         public int Priority { get => priority; set => priority = value; }

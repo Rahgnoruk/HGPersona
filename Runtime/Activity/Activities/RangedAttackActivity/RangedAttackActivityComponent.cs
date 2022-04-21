@@ -1,3 +1,4 @@
+using HyperGnosys.Persona;
 using HyperGnosys.PersonaModule;
 using UnityEngine;
 using UnityEngine.AI;

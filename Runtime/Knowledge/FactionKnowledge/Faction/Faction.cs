@@ -1,14 +1,14 @@
 using HyperGnosys.Core;
 using UnityEngine;
 
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
     [CreateAssetMenu(fileName = "New Faction", menuName = "HyperGnosys/Personality Module/Faction")]
     public class Faction : ScriptableObject
     {
-        [SerializeField] private ListWrapper<Faction> alliedFactions = new ListWrapper<Faction>();
-        [SerializeField] private ListWrapper<Faction> enemyFactions = new ListWrapper<Faction>();
-        public ListWrapper<Faction> EnemyFactions { get => enemyFactions; }
-        public ListWrapper<Faction> AlliedFactions { get => alliedFactions; }
+        [SerializeField] private ObservableList<Faction> alliedFactions = new ObservableList<Faction>();
+        [SerializeField] private ObservableList<Faction> enemyFactions = new ObservableList<Faction>();
+        public ObservableList<Faction> EnemyFactions { get => enemyFactions; }
+        public ObservableList<Faction> AlliedFactions { get => alliedFactions; }
     }
 }

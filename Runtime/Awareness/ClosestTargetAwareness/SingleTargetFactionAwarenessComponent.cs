@@ -1,8 +1,9 @@
 using HyperGnosys.BehaviourLibrary;
 using HyperGnosys.Core;
+using HyperGnosys.PersonaModule;
 using UnityEngine;
 
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
     public class SingleTargetFactionAwarenessComponent : MonoBehaviour, ISingleEnemyTargetAwareness
     {
@@ -14,8 +15,8 @@ namespace HyperGnosys.PersonaModule
 
         private void Awake()
         {
-            factionAwareness.PerceivedEnemies.OnItemAdded.AddListener(SelectClosestTarget);
-            factionAwareness.PerceivedEnemies.OnItemRemoved.AddListener(SelectClosestTarget);
+            factionAwareness.PerceivedEnemies.AddOnItemAddedListener(SelectClosestTarget);
+            factionAwareness.PerceivedEnemies.AddOnItemRemovedListener(SelectClosestTarget);
         }
         private void SelectClosestTarget(BodyTag body)
         {

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-namespace HyperGnosys.PersonaModule
+namespace HyperGnosys.Persona
 {
     [CreateAssetMenu(fileName = "New Relationship", menuName = "HyperGnosys/Persona Module/Relationship")]
     public class ScriptableRelationship : ScriptableObject

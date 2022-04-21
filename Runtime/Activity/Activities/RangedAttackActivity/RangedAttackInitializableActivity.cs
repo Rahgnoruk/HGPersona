@@ -5,7 +5,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using Object = UnityEngine.Object;
-namespace HyperGnosys.PersonalityModule
+namespace HyperGnosys.Persona
 {
     [Serializable]
     public class RangedAttackInitializableActivity : IActivity
