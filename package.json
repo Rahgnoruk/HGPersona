@@ -1,0 +1,24 @@
+{
+    "name": "com.hypergnosys.persona",
+    "version": "1.0.0",
+    "displayName": "HGPersona",
+    "description": "",
+    "unity": "2020.3",
+    "unityRelease": "11f1",
+    "documentationUrl": "https://github.com/Rahgnoruk/HGPersona",
+    "changelogUrl": "https://github.com/Rahgnoruk/HGPersona",
+    "licensesUrl": "https://github.com/Rahgnoruk/HGPersona",
+    "keywords": [
+      "HyperGnosys",
+      "Artificial Intelligence",
+      "Pluggable AI",
+      "Persona"
+    ],
+    "author": {
+      "name": "Sergio Raimond",
+      "email": "sergio.raimond@hypergnosys.com",
+      "url": "https://www.hypergnosys.com"
+    },
+    "dependencies": {
+    }
+  }

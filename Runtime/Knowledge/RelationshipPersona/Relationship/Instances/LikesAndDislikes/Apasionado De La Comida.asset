@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4dcd7f4be0f35a4e8672a5ef349f39f, type: 3}
+  m_Name: Apasionado De La Comida
+  m_EditorClassIdentifier: 
+  concept: {fileID: 11400000, guid: a75380382fe34a8468e082e9a2842762, type: 2}
+  isVisible: 1
+  intensity:
+    isConstant: 1
+    useGlobalProperty: 1
+    localProperty: 0
+    onLocalPropertyChanged:
+      name: None
+      reference: {fileID: 0}
+    scriptableProperty: {fileID: 11400000, guid: 80fea3ca0b9393542972b948608819ca,
+      type: 2}
